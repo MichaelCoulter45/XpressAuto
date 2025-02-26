@@ -63,20 +63,6 @@ body {
   transition: width 0.3s ease;
 }
 
-/* Wiggle animation for nav links */
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-3deg);
-  }
-  75% {
-    transform: rotate(3deg);
-  }
-}
-
 /* Show underline and apply wiggle on hover */
 .header nav ul li a:hover {
   animation: wiggle 0.5s ease;
@@ -185,19 +171,6 @@ body {
   transform: scale(0.95);
 }
 
-/* Yellow glow animation */
-@keyframes yellowGlow {
-  0% {
-    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
-  }
-}
-
 .service-box:hover {
   animation: yellowGlow 1.5s infinite;
   background: #ffcc00;
@@ -289,5 +262,32 @@ body {
   }
   100% {
     box-shadow: 0 0 0 rgba(255, 204, 0, 0);
+  }
+}
+
+/* Wiggle animation for nav links */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+/* Yellow glow animation */
+@keyframes yellowGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
   }
 }
