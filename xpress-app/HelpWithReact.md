@@ -1,6 +1,5 @@
 # Xpress Auto Care Website
 
-
 ## Project Overview
 
 This repository contains the source code for the Xpress Auto Care website, a modern web application for an auto repair service. The website is built using React and Vite to provide a fast, responsive user experience.
@@ -74,33 +73,30 @@ The `src/Components/` directory contains modular React components that make up t
 ### Installation
 
 1. Clone the repository
-   
+
    `git clone https://github.com/Jalv13/XpressAuto`
 
 2. Open Repository in `vs Code`
 
 3. Navigate to the project directory(using vs code terminal)
-   
+
    **run command: `cd xpress-app`**
 
-
 4. Install dependencies(using vs code terminal)
-   
+
    **run command: `npm install`**
 
 5. Start the development server(using vs code terminal)
-   
+
    **run command: `npm run dev`**
 
 6. Open your browser and navigate to `http://localhost:5173`
 
 ## Building for Production
 
-To create a production build: 
+To create a production build:
 
-
-   **run command: ` npm run build`**
-
+**run command: ` npm run build`**
 
 This will generate optimized files in the `dist` directory.
 
@@ -113,7 +109,6 @@ To add a new component:
 3. Add the component to the JSX in the render method
 
 ## Contributing
-
 
 1. Create a new branch (`git checkout -b feature/your-feature`)
 2. Commit your changes (`git commit -m 'Add some feature'`)

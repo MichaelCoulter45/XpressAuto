@@ -1,96 +1,293 @@
-* 
-
 /* General Styling */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
 /* Header */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: #ffcc00;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #ffcc00;
+  flex-wrap: wrap; /* Allows items to wrap to next line if needed */
+  gap: 10px; /* Adds consistent spacing between items, even when wrapped */
 }
 
 .header .logo {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 36px;
+  font-weight: bolder;
+}
+
+.header nav {
+  flex-grow: 1; /* Allow nav to grow and fill available space */
+  max-width: 45%; /* Prevent nav from getting too wide */
 }
 
 .header nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between; /* Distribute nav items evenly */
+  width: 100%; /* Take up all available nav width */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
 }
 
 .header nav ul li {
-    display: inline;
+  display: inline-block;
+  padding: 0 5px; /* Add some minimum padding */
+  text-align: center; /* Center the text */
 }
 
 .header nav ul li a {
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  white-space: nowrap; /* Prevent text from wrapping within links */
+  position: relative;
+  display: inline-block;
+  padding: 2px 4px;
+  transition: all 0.3s ease;
+}
+
+/* Underline effect for nav links */
+.header nav ul li a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #000;
+  transition: width 0.3s ease;
+}
+
+/* Wiggle animation for nav links */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+/* Show underline and apply wiggle on hover */
+.header nav ul li a:hover {
+  animation: wiggle 0.5s ease;
+}
+
+.header nav ul li a:hover::after {
+  width: 100%;
+}
+
+/* Shrink effect on mouse press (active state) */
+.header nav ul li a:active {
+  transform: scale(0.9);
+}
+
+.header .icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .header .icons button {
-    margin-left: 10px;
-    font-size: 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background: #ffcc00;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  position: relative; /* Needed for some of the effects */
+}
+
+/* Apply bounce effect on hover */
+.header .icons button:hover {
+  background: #7e7c7cac;
+  animation: bounce 0.6s ease;
 }
 
 /* Hero Section */
 .hero {
-    text-align: center;
-    padding: 50px;
-    font-size: 24px;
-    background: #f8f8f8;
+  text-align: center;
+  padding: 50px;
+  font-size: 24px;
+  background: #f8f8f8;
 }
 
 /* Services Section */
 .services {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
+  padding: 30px;
+  text-align: center;
+}
+
+.services h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+.services-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 20px;
 }
 
 .service-box {
-    padding: 20px;
-    background: #ddd;
-    border-radius: 10px;
-    text-align: center;
-    flex: 1;
+  padding: 25px 15px;
+  background: #ddd;
+  border-radius: 10px;
+  flex: 1;
+  max-width: 200px;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Service box hover effect */
+.service-box:hover {
+  background: #ffcc00;
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+}
+
+/* Underline effect for service boxes */
+.service-box::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  transition: width 0.3s ease;
+}
+
+.service-box:hover::after {
+  width: 60%;
+}
+
+/* Shrink on press */
+.service-box:active {
+  transform: scale(0.95);
+}
+
+/* Yellow glow animation */
+@keyframes yellowGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  }
+}
+
+.service-box:hover {
+  animation: yellowGlow 1.5s infinite;
+  background: #ffcc00;
 }
 
 /* Why Us */
 .why-us {
-    text-align: center;
-    padding: 40px;
-    background: #e6e6e6;
+  text-align: center;
+  padding: 40px;
+  background: #e6e6e6;
 }
 
 .testimonials {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 .testimonial {
-    padding: 20px;
-    background: #ffdd57;
-    border-radius: 10px;
+  padding: 20px;
+  background: #c0bdb4;
+  border-radius: 10px;
+  font-weight: medium;
+  font-family: cursive;
+  border-color: #ffcc00;
+  border-style: solid;
+  border-width: thin;
+  border-width: 1px;
 }
 
 /* Reviews Section */
 .reviews {
-    text-align: center;
-    padding: 30px;
-    background: #ccc;
+  text-align: center;
+  padding: 30px;
+  background: #ccc;
 }
 
+/* Bounce effect */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Jiggle/Shake effect */
+@keyframes jiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-7deg);
+  }
+  75% {
+    transform: rotate(7deg);
+  }
+}
+
+/* Pulse effect */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Glow effect */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 204, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 204, 0, 0);
+  }
+}
