@@ -1,28 +1,41 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { authService } from "../Services/authService";
-import Header from "./Header";
-import Footer from "./Footer";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../Services/authService.js";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
-    const result = await authService.login(username, password);
+    const result = await authService.register(username, password);
 
     if (result.success) {
-      // Redirect to home page after successful login
-      navigate("/");
+      // Redirect to dashboard or home after successful registration
+      navigate("/dashboard");
     } else {
-      setError(result.error || "Login failed. Please try again.");
+      setError(result.error || "Registration failed. Please try again.");
     }
 
     setLoading(false);
@@ -33,7 +46,7 @@ function Login() {
       <Header />
       <div className="login-page">
         <div className="login-container">
-          <h2>Login to Your Account</h2>
+          <h2>Create an Account</h2>
           {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -56,16 +69,23 @@ function Login() {
                 required
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
             <button type="submit" disabled={loading} className="login-button">
-              {loading ? "Logging in..." : "Login"}
+              {loading ? "Creating Account..." : "Register"}
             </button>
-            <div className="auth-links">
-              Don't have an account? <a href="/register">Register</a>
-            </div>
-            <div className="forgot-password">
-              <Link to="/forgot-password">Forgot Password?</Link>
-            </div>
           </form>
+          <div className="auth-links">
+            Already have an account? <a href="/login">Login</a>
+          </div>
         </div>
       </div>
       <Footer />
@@ -73,4 +93,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

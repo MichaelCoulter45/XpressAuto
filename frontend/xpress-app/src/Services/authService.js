@@ -46,4 +46,57 @@ export const authService = {
       return { success: false };
     }
   },
+
+  // Add these to your existing authService object
+  requestPasswordReset: async (email) => {
+    try {
+      const response = await axios.post(`${API_URL}/request-password-reset`, {
+        email,
+      });
+      return {
+        success: true,
+        data: response.data,
+        // In development, we're passing the token from the backend for testing
+        // In production, this would come via email
+        token: response.data.debug_token,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error.response?.data?.message || "Failed to request password reset",
+      };
+    }
+  },
+
+  resetPassword: async (token, password) => {
+    try {
+      const response = await axios.post(`${API_URL}/reset-password`, {
+        token,
+        password,
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Failed to reset password",
+      };
+    }
+  },
+
+  // Add this to your existing authService object
+  register: async (username, password) => {
+    try {
+      const response = await axios.post(`${API_URL}/register`, {
+        username,
+        password,
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Registration failed",
+      };
+    }
+  },
 };

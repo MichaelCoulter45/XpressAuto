@@ -392,7 +392,6 @@ body {
 }
 
 /*Reviews css*/
-/* ...existing code... */
 
 /* Reviews Section - Updated */
 .reviews {
@@ -575,4 +574,62 @@ body {
   }
 }
 
-/* ...existing code... */
+/* Login reset */
+.instruction-text {
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.success-message {
+  color: #28a745;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #d4edda;
+  border-radius: 4px;
+}
+
+.dev-token {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dev-token code {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: #e9ecef;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.forgot-password a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.auth-links {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.auth-links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}

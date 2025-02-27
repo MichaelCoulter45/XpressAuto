@@ -16,6 +16,9 @@ function Header() {
             <Link to="/login">Login</Link>
           </li>
           <li>
+            <Link to="/register">Register</Link>
+          </li>
+          <li>
             <a href="#">About Us</a>
           </li>
           <li>
