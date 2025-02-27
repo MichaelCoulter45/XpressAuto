@@ -99,4 +99,43 @@ export const authService = {
       };
     }
   },
+  // Add these to your existing authService object
+  getProfile: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/profile`);
+      return { success: true, data: response.data.profile };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Failed to fetch profile",
+      };
+    }
+  },
+
+  updateProfile: async (profileData) => {
+    try {
+      const response = await axios.put(`${API_URL}/profile`, profileData);
+      return { success: true, data: response.data.profile };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Failed to update profile",
+      };
+    }
+  },
+
+  changePassword: async (currentPassword, newPassword) => {
+    try {
+      const response = await axios.post(`${API_URL}/change-password`, {
+        currentPassword,
+        newPassword,
+      });
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Failed to change password",
+      };
+    }
+  },
 };

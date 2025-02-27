@@ -42,6 +42,12 @@ function Dashboard() {
           <p>This is your personal dashboard.</p>
           {/* Add your dashboard content here */}
         </div>
+        // Add this inside your dashboard-content div
+        <div className="dashboard-links">
+          <Link to="/profile" className="dashboard-link">
+            View/Edit Profile
+          </Link>
+        </div>
         <button onClick={handleLogout} className="logout-button">
           Logout
         </button>

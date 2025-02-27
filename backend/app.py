@@ -186,3 +186,65 @@ def register():
     login_user(user)
     
     return jsonify({"status": "success", "user": {"id": new_user_id, "username": username}})
+
+# Get user profile
+@app.route('/api/profile', methods=['GET'])
+@login_required
+def get_profile():
+    user_id = current_user.id
+    # Get user data, excluding password
+    user_data = {k: v for k, v in users[user_id].items() if k != 'password'}
+    
+    # Add default profile fields if they don't exist
+    default_fields = {
+        'name': '',
+        'phone': '',
+        'address': '',
+        'preferences': {}
+    }
+    
+    for field, default_value in default_fields.items():
+        if field not in user_data:
+            user_data[field] = default_value
+            users[user_id][field] = default_value
+    
+    return jsonify({"status": "success", "profile": user_data})
+
+# Update user profile
+@app.route('/api/profile', methods=['PUT'])
+@login_required
+def update_profile():
+    user_id = current_user.id
+    data = request.get_json()
+    
+    # Fields that can be updated
+    allowed_fields = ['name', 'phone', 'address', 'preferences']
+    
+    for field in allowed_fields:
+        if field in data:
+            users[user_id][field] = data[field]
+    
+    return jsonify({
+        "status": "success", 
+        "message": "Profile updated successfully",
+        "profile": {k: v for k, v in users[user_id].items() if k != 'password'}
+    })
+
+# Change password
+@app.route('/api/change-password', methods=['POST'])
+@login_required
+def change_password():
+    user_id = current_user.id
+    data = request.get_json()
+    
+    current_password = data.get('currentPassword')
+    new_password = data.get('newPassword')
+    
+    # Verify current password
+    if not check_password_hash(users[user_id]['password'], current_password):
+        return jsonify({"status": "failed", "message": "Current password is incorrect"}), 400
+    
+    # Update password
+    users[user_id]['password'] = generate_password_hash(new_password)
+    
+    return jsonify({"status": "success", "message": "Password changed successfully"})
