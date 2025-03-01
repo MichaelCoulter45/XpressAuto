@@ -58,6 +58,31 @@ function Header() {
     if (servicesDropdownOpen) setServicesDropdownOpen(false); // Close services dropdown if open
   };
 
+   // Updated function to handle opening maps with your specific address
+   const handleOpenMaps = () => {
+    // Business address and coordinates
+    const address = "2425 Atlantic Ave, Atlantic City, NJ 08401";
+    const latitude = 39.3571342;
+    const longitude = -74.4417163;
+    
+    // Check if the device is running iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    let mapsUrl;
+    if (isIOS) {
+      // Use Apple Maps for iOS devices
+      mapsUrl = `http://maps.apple.com/?daddr=${encodeURIComponent(address)}&ll=${latitude},${longitude}&dirflg=d`;
+    } else {
+      // Use Google Maps for other devices
+      mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&destination_place_id=ChIJA8e8LmfulIkRI7Ig6viyRoY&travelmode=driving`;
+      // Alternative using address: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=driving`;
+    }
+    
+    // Open the map in a new tab/window
+    window.open(mapsUrl, '_blank');
+  };
+
+
   return (
     <header className={`header ${scrolled ? "header-scrolled" : ""}`}>
       <div className="logo">
@@ -134,7 +159,12 @@ function Header() {
         <button className="icon-button" aria-label="Contact">
           <i className="fa-solid fa-phone"></i>
         </button>
-        <button className="icon-button" aria-label="Locations">
+        <button 
+          className="icon-button" 
+          aria-label="Get Directions"
+          onClick={handleOpenMaps}
+          title="Get Directions"
+        >
           <i className="fa-solid fa-location-dot"></i>
         </button>
         {user && (
