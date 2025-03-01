@@ -16,17 +16,19 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    // Use the login function from AuthContext instead of authService
+  
+    console.log("Attempting login with:", { username, password });
+    
+    // Use the login function from AuthContext
     const success = await login(username, password);
-
+    
     if (success) {
-      // Redirect to home page after successful login
+      console.log("Login successful, redirecting...");
       navigate("/");
     } else {
       setError("Login failed. Please check your credentials.");
     }
-
+  
     setLoading(false);
   };
 

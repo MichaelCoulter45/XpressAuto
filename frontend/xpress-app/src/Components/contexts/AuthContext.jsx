@@ -39,9 +39,13 @@ export const AuthProvider = ({ children }) => {
         username,
         password,
       });
-      setUser(response.data.user); // Ensure this line is setting the user state
+      // Add debugging:
+      console.log("Login response:", response.data);
+      // Check if response.data.user exists, otherwise use response.data
+      setUser(response.data.user || response.data);
       return true;
     } catch (err) {
+      console.error("Login error:", err);
       setError(err.response?.data?.message || "Login failed");
       return false;
     }
