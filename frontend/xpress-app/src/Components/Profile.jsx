@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
 import { authService } from "../Services/authService";
 import Header from "./Header";
 import Footer from "./Footer";
 
 function Profile() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState({
     username: "",
     name: "",
@@ -24,24 +25,21 @@ function Profile() {
     confirmPassword: "",
   });
 
-  const navigate = useNavigate();
-
   // Fetch profile on component mount
   useEffect(() => {
     const fetchProfile = async () => {
-      const result = await authService.getProfile();
+      if (user) {
+        const result = await authService.getProfile();
 
-      if (result.success) {
-        setProfile(result.data);
+        if (result.success) {
+          setProfile(result.data);
+        }
         setLoading(false);
-      } else {
-        // If failed to fetch profile, user might not be authenticated
-        navigate("/login");
       }
     };
 
     fetchProfile();
-  }, [navigate]);
+  }, [user]);
 
   // Handle profile form input changes
   const handleProfileChange = (e) => {

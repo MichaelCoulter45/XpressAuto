@@ -1,34 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { authService } from "../Services/authService";
+import { Link } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const result = await authService.getCurrentUser();
-      if (result.success) {
-        setUser(result.data);
-        setLoading(false);
-      } else {
-        // Redirect to login if not authenticated
-        navigate("/login");
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
-
-  const handleLogout = async () => {
-    await authService.logout();
-    navigate("/");
-  };
-
+  const { user, loading } = useAuth();
+  
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -37,7 +15,7 @@ function Dashboard() {
     <>
       <Header />
       <div className="dashboard-container">
-        <h1>Welcome, {user.username}!</h1>
+        <h1>Welcome, {user?.username}!</h1>
         <div className="dashboard-content">
           <p>This is your personal dashboard.</p>
           {/* Add dashboard content here */}
@@ -47,9 +25,6 @@ function Dashboard() {
             View/Edit Profile
           </Link>
         </div>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
       </div>
       <Footer />
     </>

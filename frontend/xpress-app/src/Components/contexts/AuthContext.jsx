@@ -32,20 +32,30 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Login function
-  const login = async (username, password) => {
-    try {
-      setError(null);
-      const response = await axios.post(`${API_URL}/login`, {
-        username,
-        password,
-      });
-      setUser(response.data.user);
-      return true;
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      return false;
-    }
-  };
+  function Login() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login, error: contextError } = useAuth(); // Get login and error from context
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setError("");
+  
+      const success = await login(username, password);
+  
+      if (success) {
+        // Redirect to home page after successful login
+        navigate("/");
+      } else {
+        setError(contextError || "Login failed. Please try again.");
+      }
+  
+      setLoading(false);
+    };
 
   // Logout function
   const logout = async () => {

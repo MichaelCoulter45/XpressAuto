@@ -76,7 +76,7 @@ function Reviews() {
     <section className="reviews">
       <div className="reviews-container">
         <h2>Customer Reviews</h2>
-        <p className="reviews-subtitle">Don't just take our word for it</p>
+        <p className="reviews-subtitle">Don&apos;t just take our word for it</p>
 
         <div className="reviews-carousel">
           <div className="review-card" key={reviews[currentIndex].id}>
