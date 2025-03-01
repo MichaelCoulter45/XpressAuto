@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { authService } from "../Services/authService";
+import { useAuth } from "./contexts/AuthContext"; // Replace authService with useAuth
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -10,19 +10,21 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get login function from auth context
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const result = await authService.login(username, password);
+    // Use the login function from AuthContext instead of authService
+    const success = await login(username, password);
 
-    if (result.success) {
+    if (success) {
       // Redirect to home page after successful login
       navigate("/");
     } else {
-      setError(result.error || "Login failed. Please try again.");
+      setError("Login failed. Please check your credentials.");
     }
 
     setLoading(false);
@@ -60,7 +62,7 @@ function Login() {
               {loading ? "Logging in..." : "Login"}
             </button>
             <div className="auth-links">
-              Don't have an account? <a href="/register">Register</a>
+              Don&apos;t have an account? <a href="/register">Register</a>
             </div>
             <div className="forgot-password">
               <Link to="/forgot-password">Forgot Password?</Link>
