@@ -11,7 +11,7 @@ function Reviews() {
       rating: 5,
       date: "January 15, 2025",
       comment:
-        "Incredible service! My car was fixed same-day and they even gave me a courtesy car wash. Will definitely return for future maintenance.",
+        "Incredible service! My car was fixed same-day. Will definitely return for future maintenance.",
       service: "Brake Repair",
     },
     {
@@ -20,7 +20,7 @@ function Reviews() {
       rating: 4,
       date: "December 3, 2024",
       comment:
-        "Professional team that explained everything clearly. Fair pricing and they finished ahead of schedule.",
+        "Professional team that explained everything clearly. Fair pricing and they finished on schedule.",
       service: "Oil Change & Tune-up",
     },
     {
@@ -29,7 +29,7 @@ function Reviews() {
       rating: 5,
       date: "November 18, 2024",
       comment:
-        "As a woman who's been talked down to at other shops, I really appreciated the respectful and transparent service here!",
+      "I really appreciated the respectful and transparent service here!",
       service: "Transmission Service",
     },
     {

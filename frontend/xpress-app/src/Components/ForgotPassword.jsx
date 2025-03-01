@@ -43,7 +43,7 @@ function ForgotPassword() {
           {!isSuccess ? (
             <>
               <p className="instruction-text">
-                Enter your email address and we'll send you instructions to
+                Enter your email address and we&apos;ll send you instructions to
                 reset your password.
               </p>
 

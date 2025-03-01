@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../Services/authService";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -40,9 +40,8 @@ function Dashboard() {
         <h1>Welcome, {user.username}!</h1>
         <div className="dashboard-content">
           <p>This is your personal dashboard.</p>
-          {/* Add your dashboard content here */}
+          {/* Add dashboard content here */}
         </div>
-        // Add this inside your dashboard-content div
         <div className="dashboard-links">
           <Link to="/profile" className="dashboard-link">
             View/Edit Profile

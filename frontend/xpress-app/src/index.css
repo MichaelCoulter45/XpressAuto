@@ -204,7 +204,7 @@ body {
 /* Reviews Section */
 .reviews {
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   background: #ccc;
 }
 
@@ -732,4 +732,40 @@ small {
   display: block;
   margin-top: 0.25rem;
   color: #6c757d;
+}
+
+
+/*logged in nav header css*/
+.nav-logout-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding: 2px 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-logout-button::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #000;
+  transition: width 0.3s ease;
+}
+
+.nav-logout-button:hover::after {
+  width: 100%;
+}
+
+.nav-logout-button:hover {
+  animation: wiggle 0.5s ease;
 }

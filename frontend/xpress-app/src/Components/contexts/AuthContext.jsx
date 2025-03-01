@@ -20,8 +20,8 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await axios.get(`${API_URL}/user`);
         setUser(response.data);
-      } catch (err) {
-        // User is not authenticated, which is fine
+      } catch (error) {
+        // User is not authenticated, which is fine for rn
         console.log("User not authenticated");
       } finally {
         setLoading(false);
