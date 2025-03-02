@@ -106,10 +106,10 @@ function Reviews() {
         </div>
 
         <div className="review-cta">
-          <a href="#" className="review-button">
+          <a href="https://www.google.com/maps/place/Xpress+Auto+Care/@39.3570517,-74.442884,214m/data=!3m1!1e3!4m20!1m11!4m10!1m4!2m2!1d-74.4822153!2d39.3421551!4e1!1m3!2m2!1d-74.4417163!2d39.3571342!3e0!3m7!1s0x89c0ee67c36a9ebf:0x89511f972c4b3b78!8m2!3d39.3570516!4d-74.4416931!9m1!1b1!16s%2Fg%2F1tj7x8jq?entry=ttu&g_ep=EgoyMDI1MDIyNi4xIKXMDSoASAFQAw%3D%3D" className="review-button">
             Leave a Review
           </a>
-          <a href="#" className="review-button secondary">
+          <a href="https://www.google.com/maps/place/Xpress+Auto+Care/@39.3570517,-74.442884,214m/data=!3m1!1e3!4m20!1m11!4m10!1m4!2m2!1d-74.4822153!2d39.3421551!4e1!1m3!2m2!1d-74.4417163!2d39.3571342!3e0!3m7!1s0x89c0ee67c36a9ebf:0x89511f972c4b3b78!8m2!3d39.3570516!4d-74.4416931!9m1!1b1!16s%2Fg%2F1tj7x8jq?entry=ttu&g_ep=EgoyMDI1MDIyNi4xIKXMDSoASAFQAw%3D%3D" className="review-button secondary">
             See All Reviews
           </a>
         </div>
