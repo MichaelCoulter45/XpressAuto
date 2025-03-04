@@ -59,7 +59,7 @@ function Header() {
   };
 
    // Updated function to handle opening maps with your specific address
-   const handleOpenMaps = () => {
+    const handleOpenMaps = () => {
     // Business address and coordinates
     const address = "2425 Atlantic Ave, Atlantic City, NJ 08401";
     const latitude = 39.3571342;
@@ -91,7 +91,7 @@ function Header() {
         </Link>
       </div>
       
-     
+      
       
       <nav className={mobileMenuOpen ? "nav-active" : ""}>
         <ul>

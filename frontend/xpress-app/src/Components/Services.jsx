@@ -1,4 +1,4 @@
-function Services() {
+function Services() { // Services listed on Home page
   return (
     <section className="services">
       <h2>Our Services</h2>
