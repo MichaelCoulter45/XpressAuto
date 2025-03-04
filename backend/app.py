@@ -54,6 +54,8 @@ def test_db():
             return jsonify({"status": "success", "message": f"Connected to PostgreSQL at {result[0]}"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+    
+
 
 # Authentication routes
 @app.route('/api/login', methods=['POST'])
@@ -91,6 +93,25 @@ def protected():
 @app.errorhandler(401)
 def unauthorized(error):
     return jsonify({"status": "error", "message": "Unauthorized access"}), 401
+
+
+@app.route('/api/add-user', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    if not data or not data.get("username") or not data.get("password"):
+        return jsonify({"status": "failed", "message": "Username and password required"}), 400
+
+    hashed_password = generate_password_hash(data["password"])
+    new_user = User(username=data["username"], password=hashed_password)
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"status": "success", "message": f"User {new_user.username} added!"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status\": \"error\", \"message\": str(e)"}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
