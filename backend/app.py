@@ -2,63 +2,71 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 import os
 import secrets
 import datetime
 
 app = Flask(__name__)
+
+# Amazon RDS PostgreSQL Connection Details
+DB_USER = "postgres"
+DB_PASSWORD = "BeachHouse"
+DB_HOST = "express-auto.c6bogymw63tm.us-east-1.rds.amazonaws.com"
+DB_PORT = "5324"
+DB_NAME = "postgres"
+
+# Construct the PostgreSQL connection URI
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Initialize SQLAlchemy
+db = SQLAlchemy(app)
+
+# Security Configurations
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key')  # Use environment variable in production!
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Adjust based on your security needs
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-# Enable CORS for your React frontend
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])  # React app's URL
+# Enable CORS for React frontend
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Mock database for users (replace with your actual database)
-users = {
-    "1": {
-        "id": "1",
-        "username": "user@example.com",
-        "password": generate_password_hash("password123")
-    }
-}
-
-# User class for Flask-Login
-class User(UserMixin):
-    def __init__(self, id, username):
-        self.id = id
-        self.username = username
+# User model for PostgreSQL
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
-    if user_id in users:
-        user_data = users[user_id]
-        return User(user_id, user_data['username'])
-    return None
+    return User.query.get(int(user_id))
+
+# Database connection test route
+@app.route('/api/db-test', methods=['GET'])
+def test_db():
+    try:
+        with db.engine.connect() as connection:
+            result = connection.execute("SELECT NOW();").fetchone()
+            return jsonify({"status": "success", "message": f"Connected to PostgreSQL at {result[0]}"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+    
+
 
 # Authentication routes
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    
-    # Find user by username
-    user_id = None
-    for id, user_data in users.items():
-        if user_data['username'] == username:
-            user_id = id
-            break
-    
-    if user_id and check_password_hash(users[user_id]['password'], password):
-        user = User(user_id, username)
+    user = User.query.filter_by(username=data.get('username')).first()
+
+    if user and check_password_hash(user.password, data.get('password')):
         login_user(user)
-        return jsonify({"status": "success", "user": {"id": user_id, "username": username}})
-    
+        return jsonify({"status": "success", "user": {"id": user.id, "username": user.username}})
+
     return jsonify({"status": "failed", "message": "Invalid username or password"}), 401
 
 @app.route('/api/logout', methods=['POST'])
@@ -86,165 +94,24 @@ def protected():
 def unauthorized(error):
     return jsonify({"status": "error", "message": "Unauthorized access"}), 401
 
+
+@app.route('/api/add-user', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    if not data or not data.get("username") or not data.get("password"):
+        return jsonify({"status": "failed", "message": "Username and password required"}), 400
+
+    hashed_password = generate_password_hash(data["password"])
+    new_user = User(username=data["username"], password=hashed_password)
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"status": "success", "message": f"User {new_user.username} added!"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status\": \"error\", \"message\": str(e)"}), 500
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-# Mock storage for password reset tokens
-# In a real application, these would be stored in a database
-reset_tokens = {}
-
-# Request password reset route
-@app.route('/api/request-password-reset', methods=['POST'])
-def request_password_reset():
-    data = request.get_json()
-    email = data.get('email')
-    
-    # Check if user exists
-    user_id = None
-    for uid, user_data in users.items():
-        if user_data['username'] == email:
-            user_id = uid
-            break
-    
-    if not user_id:
-        # Don't reveal if user exists or not for security
-        return jsonify({"status": "success", "message": "If your email is registered, you will receive a password reset link."})
-    
-    # Generate a token
-    token = secrets.token_urlsafe(32)
-    expiry = datetime.datetime.now() + datetime.timedelta(hours=1)
-    
-    # Store the token with user info and expiry
-    reset_tokens[token] = {
-        'user_id': user_id,
-        'expiry': expiry
-    }
-    
-    # In a real application, you would send an email with a link containing this token
-    # For this example, we'll just return the token in the response
-    # IMPORTANT: In production, NEVER return the token directly
-    print(f"Reset token for {email}: {token}")
-    
-    return jsonify({
-        "status": "success", 
-        "message": "If your email is registered, you will receive a password reset link.",
-        "debug_token": token  # REMOVE THIS IN PRODUCTION
-    })
-
-# Reset password route
-@app.route('/api/reset-password', methods=['POST'])
-def reset_password():
-    data = request.get_json()
-    token = data.get('token')
-    password = data.get('password')
-    
-    # Check if token exists and is valid
-    if token not in reset_tokens:
-        return jsonify({"status": "failed", "message": "Invalid or expired reset token"}), 400
-    
-    token_data = reset_tokens[token]
-    
-    # Check if token is expired
-    if datetime.datetime.now() > token_data['expiry']:
-        del reset_tokens[token]
-        return jsonify({"status": "failed", "message": "Reset token has expired"}), 400
-    
-    # Update the user's password
-    user_id = token_data['user_id']
-    users[user_id]['password'] = generate_password_hash(password)
-    
-    # Remove the used token
-    del reset_tokens[token]
-    
-    return jsonify({"status": "success", "message": "Password has been reset successfully"})
-
-# Registration route
-@app.route('/api/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    
-    # Check if username already exists
-    for user_id, user_data in users.items():
-        if user_data['username'] == username:
-            return jsonify({"status": "failed", "message": "Username already exists"}), 400
-    
-    # Generate a new user ID (in a real app, this would be handled by your database)
-    new_user_id = str(len(users) + 1)
-    
-    # Add the new user to our mock database
-    users[new_user_id] = {
-        "id": new_user_id,
-        "username": username,
-        "password": generate_password_hash(password)
-    }
-    
-    # Create and login the new user
-    user = User(new_user_id, username)
-    login_user(user)
-    
-    return jsonify({"status": "success", "user": {"id": new_user_id, "username": username}})
-
-# Get user profile
-@app.route('/api/profile', methods=['GET'])
-@login_required
-def get_profile():
-    user_id = current_user.id
-    # Get user data, excluding password
-    user_data = {k: v for k, v in users[user_id].items() if k != 'password'}
-    
-    # Add default profile fields if they don't exist
-    default_fields = {
-        'name': '',
-        'phone': '',
-        'address': '',
-        'preferences': {}
-    }
-    
-    for field, default_value in default_fields.items():
-        if field not in user_data:
-            user_data[field] = default_value
-            users[user_id][field] = default_value
-    
-    return jsonify({"status": "success", "profile": user_data})
-
-# Update user profile
-@app.route('/api/profile', methods=['PUT'])
-@login_required
-def update_profile():
-    user_id = current_user.id
-    data = request.get_json()
-    
-    # Fields that can be updated
-    allowed_fields = ['name', 'phone', 'address', 'preferences']
-    
-    for field in allowed_fields:
-        if field in data:
-            users[user_id][field] = data[field]
-    
-    return jsonify({
-        "status": "success", 
-        "message": "Profile updated successfully",
-        "profile": {k: v for k, v in users[user_id].items() if k != 'password'}
-    })
-
-# Change password
-@app.route('/api/change-password', methods=['POST'])
-@login_required
-def change_password():
-    user_id = current_user.id
-    data = request.get_json()
-    
-    current_password = data.get('currentPassword')
-    new_password = data.get('newPassword')
-    
-    # Verify current password
-    if not check_password_hash(users[user_id]['password'], current_password):
-        return jsonify({"status": "failed", "message": "Current password is incorrect"}), 400
-    
-    # Update password
-    users[user_id]['password'] = generate_password_hash(new_password)
-    
-    return jsonify({"status": "success", "message": "Password changed successfully"})
+    app.run(host='0.0.0.0', port=5000, debug=True)
